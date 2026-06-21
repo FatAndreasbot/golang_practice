@@ -7,7 +7,14 @@ import (
 
 var People map[string]int
 
-var ErrNotFound error = errors.New("map not found")
+var ErrNotFound error = errors.New("name not found")
+
+func MapInit() {
+	People = map[string]int{}
+	People["Andy"] = 24
+	People["Boone"] = 32
+	People["James"] = 44
+}
 
 func GetAge(name string) (int, error) {
 	age, exists := People[name]
@@ -32,6 +39,15 @@ func PrintAll() {
 }
 
 func main() {
-	People = map[string]int{}
+	MapInit()
 
+	age, _ := GetAge("Andy")
+	fmt.Println(age)
+	DeletePerson("Andy")
+	age, err := GetAge("Andy")
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	PrintAll()
 }
