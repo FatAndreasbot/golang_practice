@@ -1,21 +1,21 @@
 package cache_test
 
 import (
-	"cache"
+	C "cache"
 	"fmt"
 	"testing"
 	"time"
 )
 
 type user struct {
-	name string
+	Name string `json:"name"`
 }
 
 func TestCache(t *testing.T) {
-	cache := cache.NewCache()
+	cache := C.NewCache()
 
 	cache.Set("age", 42, time.Second)
-	cache.Set("user", user{name: "James"}, time.Hour)
+	cache.Set("user", user{Name: "James"}, time.Hour)
 
 	jsonData, err := cache.ToJSON()
 	if err != nil {
@@ -35,5 +35,14 @@ func TestCache(t *testing.T) {
 	if exists {
 		t.Error("value should be empty")
 	}
+	cache.Set("string", "a string", time.Hour)
 
+	_, err = C.GetAs[string](&cache, "string")
+	if err != nil {
+		t.Error(err)
+	}
+	_, err = C.GetAs[int](&cache, "string")
+	if err == nil {
+		t.Error("i did not got the error")
+	}
 }

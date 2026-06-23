@@ -70,14 +70,19 @@ func (c *Cache) ToJSON() ([]byte, error) {
 	return jsonString, err
 }
 
-func GetAs[T any](c *Cache, key string) (T, error) {
-	var err error
-	var val T
+func GetAs[T any](c *Cache, key string) (val T, err error) {
+	// var err error
+	// var val T
 	defer func() {
 		r := recover()
-		err = fmt.Errorf("casting panic %#v", r)
+		if r != nil {
+			err = fmt.Errorf("casting panic %#v", r)
+		}
 	}()
 
-	val = c.data[key].value.(T)
+	data, exists := c.data[key]
+	if exists {
+		val = data.value.(T)
+	}
 	return val, err
 }
