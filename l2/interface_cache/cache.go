@@ -2,7 +2,7 @@ package cache
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
 	"time"
 )
 
@@ -22,20 +22,21 @@ func NewCache() Cache {
 }
 
 func (c *Cache) Set(key string, value any, ttl time.Duration) {
-	timer := time.NewTimer(ttl)
+	timer := time.AfterFunc(ttl, func() {
+		fmt.Printf("deleting %s\n", key)
+		delete(c.data, key)
+	})
+
 	c.data[key] = cacheUnit{
 		value: value,
 		timer: timer,
 	}
-	go func() {
-		<-timer.C
-		delete(c.data, key)
-	}()
 }
 
 func (c *Cache) Clear() {
-	for _, val := range c.data {
+	for key, val := range c.data {
 		val.timer.Stop()
+		delete(c.data, key)
 	}
 }
 
@@ -48,6 +49,7 @@ func (c *Cache) Delete(key string) {
 	data, exists := c.data[key]
 	if exists {
 		data.timer.Stop()
+		delete(c.data, key)
 	}
 }
 
@@ -56,7 +58,7 @@ func (c *Cache) Exists(key string) bool {
 	return exists
 }
 
-func (c *Cache) ToJSON(key string) ([]byte, error) {
+func (c *Cache) ToJSON() ([]byte, error) {
 	data := make(map[string]any, len(c.data))
 
 	for key, value := range c.data {
@@ -69,6 +71,13 @@ func (c *Cache) ToJSON(key string) ([]byte, error) {
 }
 
 func GetAs[T any](c *Cache, key string) (T, error) {
-	var zero T
-	return zero, errors.New("Not implemented")
+	var err error
+	var val T
+	defer func() {
+		r := recover()
+		err = fmt.Errorf("casting panic %#v", r)
+	}()
+
+	val = c.data[key].value.(T)
+	return val, err
 }
