@@ -28,6 +28,7 @@ func DeletePerson(name string) error {
 	_, exists := People[name]
 	if exists {
 		delete(People, name)
+		return nil
 	}
 	return ErrNotFound
 }

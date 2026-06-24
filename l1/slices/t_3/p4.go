@@ -1,5 +1,6 @@
 package t3
 
+// TODO tests for 2&4
 func RemoveDuplicates[T comparable](s []T) []T {
 	uniqueSet := make(map[T]bool)
 	for _, v := range s {

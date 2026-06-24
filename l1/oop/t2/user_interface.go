@@ -5,3 +5,5 @@ type User interface {
 	HasPermission(permission string) bool
 	GetRole() string
 }
+
+// TODO getRole()!!!

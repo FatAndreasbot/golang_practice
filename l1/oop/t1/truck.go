@@ -16,6 +16,7 @@ func (t Truck) GetInfo() string {
 	return fmt.Sprintf("%s The capacity is %d", baseInfo, t.cargoCapacity)
 }
 
+// TODO return float
 func (t Truck) GetCargoCapacity() int {
 	return t.cargoCapacity
 }

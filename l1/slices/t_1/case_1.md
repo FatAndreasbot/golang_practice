@@ -1,3 +1,4 @@
+```go
 package main
 
 import "fmt"
@@ -19,3 +20,4 @@ func main() {
 	acc.value += 100           // меняется значение общего элемента
 	fmt.Println(s1, s2)        // вывод - [{200}, {0}] [{200}, {0}]
 }
+```

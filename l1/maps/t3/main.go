@@ -38,6 +38,7 @@ func InvertMap(m map[string]int) (map[int]string, error) {
 	for k, v := range m {
 		_, double := invertedMap[v]
 		if double {
+			// TODO show what double
 			return nil, errors.New("repeating values in given map")
 		}
 		invertedMap[v] = k

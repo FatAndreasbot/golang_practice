@@ -38,7 +38,7 @@ func main() {
     fmt.Println(ms2.MyInt) // 333 - передаем структуру по ссылке. меняем значение
 
     func4(ms1)
-    fmt.Println(ms1.MyInt) // 333 - передаем по значению. оригинальный инстанс не мутируется
+    fmt.Println(ms1.MyInt) // 1 - передаем по значению. оригинальный инстанс не мутируется
 
     ms5 := func5()
     fmt.Println(ms5.MyInt) // panic - null pointer dereference
