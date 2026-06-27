@@ -3,9 +3,11 @@ package cache
 import (
 	"encoding/json"
 	"fmt"
+	"sync"
 	"time"
 )
 
+// TODO no goroutines
 type cacheUnit struct {
 	value any
 	timer *time.Timer
@@ -13,16 +15,20 @@ type cacheUnit struct {
 
 type Cache struct {
 	data map[string]cacheUnit
+	lock sync.Mutex
 }
 
 func NewCache() Cache {
 	return Cache{
 		data: make(map[string]cacheUnit),
+		lock: sync.Mutex{},
 	}
 }
 
 func (c *Cache) Set(key string, value any, ttl time.Duration) {
 	timer := time.AfterFunc(ttl, func() {
+		c.lock.Lock()
+		defer c.lock.Unlock()
 		fmt.Printf("deleting %s\n", key)
 		delete(c.data, key)
 	})
@@ -34,6 +40,9 @@ func (c *Cache) Set(key string, value any, ttl time.Duration) {
 }
 
 func (c *Cache) Clear() {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+
 	for key, val := range c.data {
 		val.timer.Stop()
 		delete(c.data, key)
@@ -41,11 +50,17 @@ func (c *Cache) Clear() {
 }
 
 func (c *Cache) Get(key string) (any, bool) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+
 	data, exists := c.data[key]
 	return data.value, exists
 }
 
 func (c *Cache) Delete(key string) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+
 	data, exists := c.data[key]
 	if exists {
 		data.timer.Stop()
@@ -59,6 +74,9 @@ func (c *Cache) Exists(key string) bool {
 }
 
 func (c *Cache) ToJSON() ([]byte, error) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+
 	data := make(map[string]any, len(c.data))
 
 	for key, value := range c.data {
@@ -71,8 +89,9 @@ func (c *Cache) ToJSON() ([]byte, error) {
 }
 
 func GetAs[T any](c *Cache, key string) (val T, err error) {
-	// var err error
-	// var val T
+	c.lock.Lock()
+	defer c.lock.Unlock()
+
 	defer func() {
 		r := recover()
 		if r != nil {

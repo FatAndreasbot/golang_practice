@@ -22,8 +22,11 @@ func TestCache(t *testing.T) {
 		t.Error(err)
 	}
 	fmt.Println(string(jsonData))
+	if string(jsonData) != "{\"age\":42,\"user\":{\"name\":\"James\"}}" {
+		t.Error("got wrong json data")
+	}
 
-	cache.Delete("age")
+	time.Sleep(time.Second * 2)
 	jsonData, err = cache.ToJSON()
 	if err != nil {
 		t.Error(err)
