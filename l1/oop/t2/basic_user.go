@@ -25,3 +25,7 @@ func NewBasicUser(username string) BasicUser {
 		permissions: []Permission{Read},
 	}
 }
+
+func (u *BasicUser) GetRole() string {
+	return "BasicUser"
+}

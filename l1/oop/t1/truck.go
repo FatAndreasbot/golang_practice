@@ -4,7 +4,7 @@ import "fmt"
 
 type Truck struct {
 	Car
-	cargoCapacity int
+	cargoCapacity float32
 }
 
 func (t Truck) Honk() string {
@@ -16,12 +16,11 @@ func (t Truck) GetInfo() string {
 	return fmt.Sprintf("%s The capacity is %d", baseInfo, t.cargoCapacity)
 }
 
-// TODO return float
-func (t Truck) GetCargoCapacity() int {
+func (t Truck) GetCargoCapacity() float32 {
 	return t.cargoCapacity
 }
 
-func NewTruck(brand string, capacity int) Truck {
+func NewTruck(brand string, capacity float32) Truck {
 	return Truck{
 		Car:           NewCar(brand),
 		cargoCapacity: capacity,

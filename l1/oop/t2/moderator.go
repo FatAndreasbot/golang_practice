@@ -12,3 +12,7 @@ func NewModerator(username string) Moderator {
 		BasicUser: base,
 	}
 }
+
+func (u *Moderator) GetRole() string {
+	return "Moderator"
+}

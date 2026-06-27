@@ -1,6 +1,6 @@
 package t3
 
-func RemoveAllBtValue[T comparable](s []T, value T) []T {
+func RemoveAllByValue[T comparable](s []T, value T) []T {
 	s2 := make([]T, 0, len(s))
 
 	for _, v := range s {

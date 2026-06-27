@@ -5,18 +5,13 @@ import (
 	"strings"
 )
 
-// TODO перевести слова в н рег
 // WordFrequency принимает строку текста и возвращает map с частотой слов.
 func WordFrequency(text string) map[string]int {
 	wordFreq := make(map[string]int)
 
-	for _, val := range strings.Split(text, " ") {
-		_, exists := wordFreq[val]
-		if exists {
-			wordFreq[val] += 1
-		} else {
-			wordFreq[val] = 1
-		}
+	for val := range strings.SplitSeq(text, " ") {
+		lowered := strings.ToLower(val)
+		wordFreq[lowered] += 1
 	}
 
 	return wordFreq
