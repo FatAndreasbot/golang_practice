@@ -3,15 +3,22 @@ package main
 import (
 	"fmt"
 	"sync"
+	"time"
 )
+
+func getPurchasesByID(id int, url string) string {
+	time.Sleep(3 * time.Second)
+
+	return "response"
+}
 
 func main() {
 	url := "https://www.wildberries.ru/getPurchasesByID?id=%d"
-	responses := make([]int, 100_000, 100_000)
+	responses := make([]string, 100_000, 100_000)
 	jobs := make(chan int, 100_000)
 	var working sync.WaitGroup
 
-	for worker := range 300 {
+	for range 300 {
 		go func() {
 			for id := range jobs {
 				responses[id] = getPurchasesByID(id, url)
@@ -22,13 +29,13 @@ func main() {
 
 	for jobID := range 100_000 {
 		jobs <- jobID
-		working.Add()
+		working.Add(1)
 	}
 
 	working.Wait()
-	jobs.close()
+	close(jobs)
 
-	for _, repsonse := range responses {
+	for _, response := range responses {
 		fmt.Println(response)
 	}
 }
