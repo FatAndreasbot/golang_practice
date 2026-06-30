@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 	"sync"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -24,7 +25,7 @@ func getDBConnection() (*sql.DB){
 	return connection
 }
 
-func GetAllComments() ([]Comment, error){
+func GetAllComments() (chan *Comment, error){
 	conn := getDBConnection()
 	stmt := "SELECT c.id, c.User_ID, c.text FROM Comments AS c"
 
@@ -34,17 +35,19 @@ func GetAllComments() ([]Comment, error){
 	}
 	defer rows.Close()
 
-	var allComments []Comment
+	var allComments chan *Comment
 
-	for rows.Next(){
-		var comment Comment
-		err := rows.Scan(&comment.id, &comment.authorID, &comment.text)
-		if err != nil{
-			return nil, errors.Join(err, errors.New("error when reading db response"))
+	go func(){
+		for rows.Next(){
+			var comment Comment
+			err := rows.Scan(&comment.id, &comment.authorID, &comment.text)
+			if err != nil{
+				log.Println(errors.Join(err, errors.New("error when reading db response")))
+			}
+			allComments <- &comment
 		}
-		allComments = append(allComments, comment)
-	}
-
+		close(allComments)
+	}()
 	return allComments, nil
 }
 
