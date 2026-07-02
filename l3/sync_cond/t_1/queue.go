@@ -2,31 +2,29 @@ package t1
 
 import "sync"
 
-type BondedQueue struct {
-	data    []any
+type BondedQueue[T any] struct {
+	data    []T
 	maxSize int
-	lock    sync.Mutex
 	cond    sync.Cond
 }
 
-func NewBondedQueue(maxSize int) *BondedQueue {
-	queue := BondedQueue{
-		data:    make([]any, 0, maxSize),
+func NewBondedQueue[T any](maxSize int) *BondedQueue[T] {
+	queue := BondedQueue[T]{
+		data:    make([]T, 0, maxSize),
 		maxSize: maxSize,
-		lock:    sync.Mutex{},
 		cond:    *sync.NewCond(&sync.Mutex{}),
 	}
 
 	return &queue
 }
 
-func (b *BondedQueue) Put(value any) {
-	if len(b.data) == b.maxSize {
+func (b *BondedQueue[T]) Put(value T) {
+	b.cond.L.Lock()
+	defer b.cond.L.Unlock()
+
+	if len(b.data) >= b.maxSize {
 		b.cond.Wait()
 	}
-
-	b.lock.Lock()
-	defer b.lock.Unlock()
 
 	b.data = append(b.data, value)
 	if len(b.data) == 1 {
@@ -37,13 +35,13 @@ func (b *BondedQueue) Put(value any) {
 	}
 }
 
-func (b *BondedQueue) Get() any {
+func (b *BondedQueue[T]) Get() any {
+	b.cond.L.Lock()
+	defer b.cond.L.Unlock()
+
 	if len(b.data) == 0 {
 		b.cond.Wait()
 	}
-
-	b.lock.Lock()
-	defer b.lock.Unlock()
 
 	value := b.data[0]
 	b.data = b.data[1:]
@@ -55,10 +53,15 @@ func (b *BondedQueue) Get() any {
 	return value
 }
 
-func (b *BondedQueue) Length() int {
+func (b *BondedQueue[T]) Length() int {
 	return len(b.data)
 }
 
-func (b *BondedQueue) Shutdown() {
+func (b *BondedQueue[T]) Shutdown() {
+	b.maxSize = 0
+	// простой и рабоий способ запретить ввод новых данных в очередь
+}
 
+func (b *BondedQueue[T]) IsClosed() bool {
+	return b.maxSize == 0
 }
