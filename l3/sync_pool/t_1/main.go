@@ -1,31 +1,35 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"sync"
 )
 
 const CAP_SYMBOL_DIFFERENCE byte = 'a' - 'A'
 
+var alphabetArray []byte = []byte("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
 var stringBufferPool sync.Pool = sync.Pool{
-	New: func() any { return []byte("ABCDEFGHIJKLMNOPQRSTUVWXYZ") },
+	New: func() any { return bytes.NewBuffer([]byte{}) },
 }
 
 // не совсем понял как и зачем тут применять pool, поэтому вот такое написал
+// UPD до меня дошло!!! в строке 20 я аллоцирую новый массив. а надо брать инстанс из pool
 func ProcessString(s string) string {
-	alphabetArray := stringBufferPool.Get().([]byte)
-	buffer := []byte(s)
-	for i := range buffer {
-		char := buffer[i]
+	buffer := stringBufferPool.Get().(*bytes.Buffer)
+	defer stringBufferPool.Put(buffer)
+	defer buffer.Reset()
+	for i := range s {
+		char := s[i]
 		if char < 'a' || char > 'z' {
+			buffer.WriteByte(char)
 			continue
 		}
-		buffer[i] = alphabetArray[char-'a']
+		buffer.WriteByte(alphabetArray[char-'a'])
 	}
 
-	stringBufferPool.Put(alphabetArray)
-
-	return string(buffer)
+	return buffer.String()
 }
 
 func main() {
