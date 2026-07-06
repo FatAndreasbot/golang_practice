@@ -1,0 +1,8 @@
+go 1.26.4
+
+use (
+	.
+	../../l3/concurrency/t_1
+	../proto/proto
+	./db_mock
+)
