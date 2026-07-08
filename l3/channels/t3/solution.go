@@ -1,10 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
+// TODO check
 func main() {
-	naturals := make(chan int, 65536)
-	squares := make(chan int, 65536)
+	naturals := make(chan int)
+	squares := make(chan int)
+
+	var wg sync.WaitGroup
 
 	go func() {
 		for natural := range naturals {
@@ -12,12 +18,21 @@ func main() {
 		}
 	}()
 
-	for i := range 50 {
-		naturals <- i
-	}
+	go func() {
+		for i := range 50 {
+			wg.Add(1)
+			naturals <- i
+		}
+	}()
 
-	for range 50 {
-		square := <-squares
-		fmt.Printf("%d ", square)
-	}
+	go func() {
+		for range 50 {
+			square := <-squares
+			fmt.Printf("%d ", square)
+		}
+	}()
+
+	wg.Wait()
+	close(naturals)
+	close(squares)
 }

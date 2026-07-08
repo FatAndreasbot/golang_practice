@@ -40,6 +40,8 @@ func (c *Cache) Set(key string, value any) {
 			delete(c.data, key)
 		}),
 	}
+	c.mu.Lock()
+	defer c.mu.Unlock()
 	c.data[key] = newCacheUnit
 }
 

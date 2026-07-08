@@ -8,7 +8,7 @@ import (
 
 func FanOut[InputT any, ReturnT any](chanInput <-chan InputT, count int, work func(InputT) ReturnT) []<-chan ReturnT {
 	ret := make([]<-chan ReturnT, 0, count)
-
+	// TODO close channel
 	for range count {
 		output := make(chan ReturnT)
 		ret = append(ret, output)
@@ -16,6 +16,7 @@ func FanOut[InputT any, ReturnT any](chanInput <-chan InputT, count int, work fu
 			for input := range chanInput {
 				output <- work(input)
 			}
+
 		}()
 	}
 

@@ -6,16 +6,16 @@ import (
 )
 
 type Restaurant struct {
-	cond          sync.Cond
+	cond          *sync.Cond
 	tableCount    int
 	occupiedCount int
 }
 
-func NewReastaurant(tableCount int) Restaurant {
-	return Restaurant{
+func NewReastaurant(tableCount int) *Restaurant {
+	return &Restaurant{
 		tableCount:    tableCount,
 		occupiedCount: 0,
-		cond:          *sync.NewCond(&sync.Mutex{}),
+		cond:          sync.NewCond(&sync.Mutex{}),
 	}
 }
 

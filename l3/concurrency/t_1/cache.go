@@ -7,8 +7,8 @@ type Cache[K comparable, T any] struct {
 	lock sync.RWMutex
 }
 
-func NewCache[K comparable, T any]() Cache[K, T] {
-	return Cache[K, T]{
+func NewCache[K comparable, T any]() *Cache[K, T] {
+	return &Cache[K, T]{
 		data: make(map[K]T),
 		lock: sync.RWMutex{},
 	}

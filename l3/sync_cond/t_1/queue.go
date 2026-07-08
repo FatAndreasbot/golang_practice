@@ -35,7 +35,7 @@ func (b *BondedQueue[T]) Put(value T) {
 	}
 }
 
-func (b *BondedQueue[T]) Get() any {
+func (b *BondedQueue[T]) Get() T {
 	b.cond.L.Lock()
 	defer b.cond.L.Unlock()
 

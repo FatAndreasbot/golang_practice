@@ -21,6 +21,9 @@ func TeeChannel[T any](in <-chan T, count int) ([]<-chan T, error) {
 
 	ret := make([]<-chan T, 0, count)
 
+	// TODO move channal init oustside loop
+	// make it buffered
+
 	go func() {
 		for value := range in {
 

@@ -21,6 +21,7 @@ func Split(in <-chan string, n int) []chan string {
 	for range n {
 		out = append(out, make(chan string))
 	}
+	// TODO tound-robbing details
 	go func() {
 		for _, outChan := range out {
 			go func() {

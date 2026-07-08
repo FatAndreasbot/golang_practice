@@ -30,6 +30,8 @@ func main() {
 свое значение, и поэтому второй пока не создался
 # Исправление
 ```go
+
+// TODO fan-in solution
 func main() {
 	timeStart := time.Now()
 	ch1 := worker()
