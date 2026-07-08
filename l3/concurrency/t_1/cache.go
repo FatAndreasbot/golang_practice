@@ -16,14 +16,17 @@ func NewCache[K comparable, T any]() *Cache[K, T] {
 
 func (c *Cache[K, T]) Set(key K, value T) {
 	c.lock.Lock()
+	defer c.lock.Unlock()
+
 	c.data[key] = value
-	c.lock.Unlock()
 }
 
 func (c *Cache[K, T]) Get(key K) (*T, bool) {
 	c.lock.RLock()
+	defer c.lock.RUnlock()
+
 	data, ok := c.data[key]
-	c.lock.RUnlock()
+
 	return &data, ok
 }
 

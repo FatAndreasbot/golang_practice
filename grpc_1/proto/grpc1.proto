@@ -6,7 +6,7 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
-option go_package = "grpc/proto";
+option go_package = "proto/proto";
 
 
 service UserAPI{
@@ -50,4 +50,29 @@ message GetUserResponse {
     Role role = 4;
     google.protobuf.Timestamp created_at = 5;
     google.protobuf.Timestamp updated_at = 6;
+}
+
+
+service ChatAPI{
+    rpc Create(CreateChatRequest) returns (CreateChatResponse);
+    rpc Delete(DeleteChatRequest) returns (google.protobuf.Empty);
+    rpc SendMessage(SendMessageRequest) returns (google.protobuf.Empty);
+}
+
+message CreateChatRequest{
+    repeated string usernames = 1;
+}
+
+message CreateChatResponse{
+    int64 id = 1;
+}
+
+message DeleteChatRequest{
+    int64 id = 1;
+}
+
+message SendMessageRequest{
+    string from = 1;
+    string text = 2;
+    google.protobuf.Timestamp timestamp = 3;
 }

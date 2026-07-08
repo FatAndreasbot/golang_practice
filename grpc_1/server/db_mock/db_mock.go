@@ -24,7 +24,7 @@ type User struct {
 }
 
 type DBMock struct {
-	store  t1.Cache[int64, User]
+	store  *t1.Cache[int64, User]
 	nextID int64
 }
 

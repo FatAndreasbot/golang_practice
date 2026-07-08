@@ -378,6 +378,198 @@ func (x *GetUserResponse) GetUpdatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+type CreateChatRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Usernames     []string               `protobuf:"bytes,1,rep,name=usernames,proto3" json:"usernames,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateChatRequest) Reset() {
+	*x = CreateChatRequest{}
+	mi := &file_grpc1_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateChatRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateChatRequest) ProtoMessage() {}
+
+func (x *CreateChatRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc1_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateChatRequest.ProtoReflect.Descriptor instead.
+func (*CreateChatRequest) Descriptor() ([]byte, []int) {
+	return file_grpc1_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *CreateChatRequest) GetUsernames() []string {
+	if x != nil {
+		return x.Usernames
+	}
+	return nil
+}
+
+type CreateChatResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateChatResponse) Reset() {
+	*x = CreateChatResponse{}
+	mi := &file_grpc1_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateChatResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateChatResponse) ProtoMessage() {}
+
+func (x *CreateChatResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc1_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateChatResponse.ProtoReflect.Descriptor instead.
+func (*CreateChatResponse) Descriptor() ([]byte, []int) {
+	return file_grpc1_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *CreateChatResponse) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+type DeleteChatRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteChatRequest) Reset() {
+	*x = DeleteChatRequest{}
+	mi := &file_grpc1_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteChatRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteChatRequest) ProtoMessage() {}
+
+func (x *DeleteChatRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc1_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteChatRequest.ProtoReflect.Descriptor instead.
+func (*DeleteChatRequest) Descriptor() ([]byte, []int) {
+	return file_grpc1_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *DeleteChatRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+type SendMessageRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	From          string                 `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
+	Text          string                 `protobuf:"bytes,2,opt,name=text,proto3" json:"text,omitempty"`
+	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SendMessageRequest) Reset() {
+	*x = SendMessageRequest{}
+	mi := &file_grpc1_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SendMessageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SendMessageRequest) ProtoMessage() {}
+
+func (x *SendMessageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc1_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SendMessageRequest.ProtoReflect.Descriptor instead.
+func (*SendMessageRequest) Descriptor() ([]byte, []int) {
+	return file_grpc1_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *SendMessageRequest) GetFrom() string {
+	if x != nil {
+		return x.From
+	}
+	return ""
+}
+
+func (x *SendMessageRequest) GetText() string {
+	if x != nil {
+		return x.Text
+	}
+	return ""
+}
+
+func (x *SendMessageRequest) GetTimestamp() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Timestamp
+	}
+	return nil
+}
+
 var File_grpc1_proto protoreflect.FileDescriptor
 
 const file_grpc1_proto_rawDesc = "" +
@@ -405,7 +597,17 @@ const file_grpc1_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt*\x1b\n" +
+	"updated_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"1\n" +
+	"\x11CreateChatRequest\x12\x1c\n" +
+	"\tusernames\x18\x01 \x03(\tR\tusernames\"$\n" +
+	"\x12CreateChatResponse\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"#\n" +
+	"\x11DeleteChatRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"v\n" +
+	"\x12SendMessageRequest\x12\x12\n" +
+	"\x04from\x18\x01 \x01(\tR\x04from\x12\x12\n" +
+	"\x04text\x18\x02 \x01(\tR\x04text\x128\n" +
+	"\ttimestamp\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp*\x1b\n" +
 	"\x04Role\x12\b\n" +
 	"\x04USER\x10\x00\x12\t\n" +
 	"\x05ADMIN\x10\x012\xf9\x01\n" +
@@ -413,8 +615,11 @@ const file_grpc1_proto_rawDesc = "" +
 	"\x06Create\x12\x18.grpc1.CreateUserRequest\x1a\x19.grpc1.CreateUserResponse\x127\n" +
 	"\x03Get\x12\x18.grpc1.SingleUserRequest\x1a\x16.grpc1.GetUserResponse\x12:\n" +
 	"\x06Update\x12\x18.grpc1.UpdateUserRequest\x1a\x16.google.protobuf.Empty\x12:\n" +
-	"\x06Delete\x12\x18.grpc1.SingleUserRequest\x1a\x16.google.protobuf.EmptyB\fZ\n" +
-	"grpc/protob\x06proto3"
+	"\x06Delete\x12\x18.grpc1.SingleUserRequest\x1a\x16.google.protobuf.Empty2\xc6\x01\n" +
+	"\aChatAPI\x12=\n" +
+	"\x06Create\x12\x18.grpc1.CreateChatRequest\x1a\x19.grpc1.CreateChatResponse\x12:\n" +
+	"\x06Delete\x12\x18.grpc1.DeleteChatRequest\x1a\x16.google.protobuf.Empty\x12@\n" +
+	"\vSendMessage\x12\x19.grpc1.SendMessageRequest\x1a\x16.google.protobuf.EmptyB\rZ\vproto/protob\x06proto3"
 
 var (
 	file_grpc1_proto_rawDescOnce sync.Once
@@ -429,7 +634,7 @@ func file_grpc1_proto_rawDescGZIP() []byte {
 }
 
 var file_grpc1_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_grpc1_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_grpc1_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_grpc1_proto_goTypes = []any{
 	(Role)(0),                      // 0: grpc1.Role
 	(*CreateUserRequest)(nil),      // 1: grpc1.CreateUserRequest
@@ -437,30 +642,41 @@ var file_grpc1_proto_goTypes = []any{
 	(*UpdateUserRequest)(nil),      // 3: grpc1.UpdateUserRequest
 	(*CreateUserResponse)(nil),     // 4: grpc1.CreateUserResponse
 	(*GetUserResponse)(nil),        // 5: grpc1.GetUserResponse
-	(*wrapperspb.StringValue)(nil), // 6: google.protobuf.StringValue
-	(*timestamppb.Timestamp)(nil),  // 7: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),          // 8: google.protobuf.Empty
+	(*CreateChatRequest)(nil),      // 6: grpc1.CreateChatRequest
+	(*CreateChatResponse)(nil),     // 7: grpc1.CreateChatResponse
+	(*DeleteChatRequest)(nil),      // 8: grpc1.DeleteChatRequest
+	(*SendMessageRequest)(nil),     // 9: grpc1.SendMessageRequest
+	(*wrapperspb.StringValue)(nil), // 10: google.protobuf.StringValue
+	(*timestamppb.Timestamp)(nil),  // 11: google.protobuf.Timestamp
+	(*emptypb.Empty)(nil),          // 12: google.protobuf.Empty
 }
 var file_grpc1_proto_depIdxs = []int32{
 	0,  // 0: grpc1.CreateUserRequest.role:type_name -> grpc1.Role
-	6,  // 1: grpc1.UpdateUserRequest.name:type_name -> google.protobuf.StringValue
-	6,  // 2: grpc1.UpdateUserRequest.email:type_name -> google.protobuf.StringValue
+	10, // 1: grpc1.UpdateUserRequest.name:type_name -> google.protobuf.StringValue
+	10, // 2: grpc1.UpdateUserRequest.email:type_name -> google.protobuf.StringValue
 	0,  // 3: grpc1.GetUserResponse.role:type_name -> grpc1.Role
-	7,  // 4: grpc1.GetUserResponse.created_at:type_name -> google.protobuf.Timestamp
-	7,  // 5: grpc1.GetUserResponse.updated_at:type_name -> google.protobuf.Timestamp
-	1,  // 6: grpc1.UserAPI.Create:input_type -> grpc1.CreateUserRequest
-	2,  // 7: grpc1.UserAPI.Get:input_type -> grpc1.SingleUserRequest
-	3,  // 8: grpc1.UserAPI.Update:input_type -> grpc1.UpdateUserRequest
-	2,  // 9: grpc1.UserAPI.Delete:input_type -> grpc1.SingleUserRequest
-	4,  // 10: grpc1.UserAPI.Create:output_type -> grpc1.CreateUserResponse
-	5,  // 11: grpc1.UserAPI.Get:output_type -> grpc1.GetUserResponse
-	8,  // 12: grpc1.UserAPI.Update:output_type -> google.protobuf.Empty
-	8,  // 13: grpc1.UserAPI.Delete:output_type -> google.protobuf.Empty
-	10, // [10:14] is the sub-list for method output_type
-	6,  // [6:10] is the sub-list for method input_type
-	6,  // [6:6] is the sub-list for extension type_name
-	6,  // [6:6] is the sub-list for extension extendee
-	0,  // [0:6] is the sub-list for field type_name
+	11, // 4: grpc1.GetUserResponse.created_at:type_name -> google.protobuf.Timestamp
+	11, // 5: grpc1.GetUserResponse.updated_at:type_name -> google.protobuf.Timestamp
+	11, // 6: grpc1.SendMessageRequest.timestamp:type_name -> google.protobuf.Timestamp
+	1,  // 7: grpc1.UserAPI.Create:input_type -> grpc1.CreateUserRequest
+	2,  // 8: grpc1.UserAPI.Get:input_type -> grpc1.SingleUserRequest
+	3,  // 9: grpc1.UserAPI.Update:input_type -> grpc1.UpdateUserRequest
+	2,  // 10: grpc1.UserAPI.Delete:input_type -> grpc1.SingleUserRequest
+	6,  // 11: grpc1.ChatAPI.Create:input_type -> grpc1.CreateChatRequest
+	8,  // 12: grpc1.ChatAPI.Delete:input_type -> grpc1.DeleteChatRequest
+	9,  // 13: grpc1.ChatAPI.SendMessage:input_type -> grpc1.SendMessageRequest
+	4,  // 14: grpc1.UserAPI.Create:output_type -> grpc1.CreateUserResponse
+	5,  // 15: grpc1.UserAPI.Get:output_type -> grpc1.GetUserResponse
+	12, // 16: grpc1.UserAPI.Update:output_type -> google.protobuf.Empty
+	12, // 17: grpc1.UserAPI.Delete:output_type -> google.protobuf.Empty
+	7,  // 18: grpc1.ChatAPI.Create:output_type -> grpc1.CreateChatResponse
+	12, // 19: grpc1.ChatAPI.Delete:output_type -> google.protobuf.Empty
+	12, // 20: grpc1.ChatAPI.SendMessage:output_type -> google.protobuf.Empty
+	14, // [14:21] is the sub-list for method output_type
+	7,  // [7:14] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_grpc1_proto_init() }
@@ -474,9 +690,9 @@ func file_grpc1_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_grpc1_proto_rawDesc), len(file_grpc1_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   5,
+			NumMessages:   9,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_grpc1_proto_goTypes,
 		DependencyIndexes: file_grpc1_proto_depIdxs,
