@@ -20,11 +20,11 @@ func (c *Cache[K, T]) Set(key K, value T) {
 	c.lock.Unlock()
 }
 
-func (c *Cache[K, T]) Get(key K) (T, bool) {
+func (c *Cache[K, T]) Get(key K) (*T, bool) {
 	c.lock.RLock()
 	data, ok := c.data[key]
 	c.lock.RUnlock()
-	return data, ok
+	return &data, ok
 }
 
 func (c *Cache[K, T]) Delete(key K) {
