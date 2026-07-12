@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package proto.order_service;
+
+option go_package = "proto/order_service";
+
+service OrderService {
+    rpc GetOrderStatus (OrderStatusRequest) returns (OrderStatusResponse);
+    rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse);
+}
+
+
+message OrderStatusRequest {
+    int64 order_id;
+    int64 user_id;
+}
+
+message OrderStatusResponse {
+    string order_status;
+}
+
+message CreateOrderRequest {
+    int64 user_id;
+    int64 market_id;
+    string order_type;
+    int32 price;
+    uint32 quantity;
+}
