@@ -28,8 +28,8 @@ func (s *SpotInstrumentServer) ViewMarkets(ctx context.Context, req *service.Vie
 	}
 
 	allowedMarkets := make([]*service.ViewMarketsResponse_Market, 0)
-	s.lock.RLock()
 
+	s.lock.RLock()
 	for marketUUID, market := range s.store {
 		if !market.IsValid() {
 			continue
@@ -43,8 +43,8 @@ func (s *SpotInstrumentServer) ViewMarkets(ctx context.Context, req *service.Vie
 			})
 		}
 	}
-
 	s.lock.RUnlock()
+
 	return &service.ViewMarketsResponse{
 		Markets: allowedMarkets,
 	}, nil

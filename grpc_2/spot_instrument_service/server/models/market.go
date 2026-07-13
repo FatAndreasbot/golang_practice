@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"time"
 )
@@ -26,14 +27,16 @@ func GetRoleFromName(name string) (Role, error) {
 	}
 }
 
-func (r Role) Name() string {
+func (r Role) ToString() (string, error) {
 	switch r {
 	case ADMIN:
-		return "ADMIN"
+		return "ADMIN", nil
 	case BROKER:
-		return "BROKER"
+		return "BROKER", nil
+	case USER:
+		return "USER", nil
 	default:
-		return "USER"
+		return "", errors.New("role value was not found")
 	}
 }
 
