@@ -28,7 +28,7 @@ message OrderStatusResponse {
 
 message CreateOrderRequest {
     int64 user_id = 1;
-    int64 market_id = 2;
+    bytes market_uuid = 2;
     string order_type = 3;
     int32 price = 4;
     uint32 quantity = 5;
