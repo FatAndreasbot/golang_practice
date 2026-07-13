@@ -15,7 +15,7 @@ service SpotInstrumentService {
 }
 
 message ViewMarketsRequest {
-    UserRole user_roles = 1;
+    UserRole user_role = 1;
 }
 
 message ViewMarketsResponse{

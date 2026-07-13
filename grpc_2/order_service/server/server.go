@@ -6,7 +6,7 @@ import (
 	"order_service/server/models"
 	orderServiceDeclaration "proto/order_service"
 	spotInstrumentService "proto/spot_instrument_service"
-	"sync"
+	"t1"
 	"time"
 
 	"github.com/google/uuid"
@@ -18,16 +18,18 @@ import (
 
 type OrderServer struct {
 	orderServiceDeclaration.UnimplementedOrderServiceServer
-	spotInstrumentClient *spotInstrumentService.SpotInstrumentServiceClient
-	storage              map[int64]*models.Order
-	nextID               int64
-	lock                 sync.RWMutex
+	spotInstrumentClient spotInstrumentService.SpotInstrumentServiceClient
+	orderStorage         *t1.Cache[int64, *models.Order]
+	userStorage          *t1.Cache[int64, *models.User]
+
+	nextID int64
 }
 
 func NewOrderServer() (*OrderServer, error) {
 	server := OrderServer{
-		storage: make(map[int64]*models.Order),
-		nextID:  1,
+		orderStorage: t1.NewCache[int64, *models.Order](),
+		userStorage:  t1.NewCache[int64, *models.User](),
+		nextID:       1,
 	}
 	// TODO get service address from .env
 	conn, err := grpc.NewClient(":8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
@@ -35,7 +37,9 @@ func NewOrderServer() (*OrderServer, error) {
 		return nil, errors.Join(err, errors.New("could not create client"))
 	}
 	client := spotInstrumentService.NewSpotInstrumentServiceClient(conn)
-	server.spotInstrumentClient = &client
+	server.spotInstrumentClient = client
+
+	// TODO fill userStorage with mock data
 
 	return &server, nil
 }
@@ -44,6 +48,15 @@ func (s *OrderServer) CreateOrder(ctx context.Context, req *orderServiceDeclarat
 	if len(req.MarketUuid) != 16 {
 		return nil, status.Error(codes.InvalidArgument, "the length of the uuid is not 16")
 	}
+
+	user, ok := s.userStorage.Get(req.GetUserId())
+	if !ok {
+		return nil, status.Error(codes.NotFound, "user was not found")
+	}
+
+	s.spotInstrumentClient.ViewMarkets(ctx, &spotInstrumentService.ViewMarketsRequest{
+		UserRoles: user.Role,
+	})
 
 	newOrder := models.Order{
 		UserID:     req.GetUserId(),
@@ -55,18 +68,17 @@ func (s *OrderServer) CreateOrder(ctx context.Context, req *orderServiceDeclarat
 	}
 	thisOrderID := s.nextID
 
-	s.lock.Lock()
+	s.spotInstrumentClient.ViewMarkets(ctx, &spotInstrumentService.ViewMarketsRequest{})
+
 	s.nextID++
-	s.storage[thisOrderID] = &newOrder
-	s.lock.Unlock()
+	s.orderStorage.Set(thisOrderID, &newOrder)
 
 	go func() {
 		time.Sleep(time.Second * 5)
 
-		s.lock.Lock()
-		defer s.lock.Unlock()
-		if s.storage[thisOrderID].Status == models.CREATED {
-			s.storage[thisOrderID].Status = models.PROCESSING
+		order, _ := s.orderStorage.Get(thisOrderID)
+		if order.Status == models.CREATED {
+			order.Status = models.PROCESSING
 		}
 	}()
 
@@ -77,7 +89,7 @@ func (s *OrderServer) CreateOrder(ctx context.Context, req *orderServiceDeclarat
 }
 
 func (s *OrderServer) GetOrderStatus(ctx context.Context, req *orderServiceDeclaration.OrderStatusRequest) (*orderServiceDeclaration.OrderStatusResponse, error) {
-	order, ok := s.storage[req.GetOrderId()]
+	order, ok := s.orderStorage.Get(req.GetOrderId())
 	if !ok {
 		return nil, status.Error(codes.NotFound, "order was not found")
 	}

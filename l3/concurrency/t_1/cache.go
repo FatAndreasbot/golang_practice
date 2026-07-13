@@ -21,13 +21,13 @@ func (c *Cache[K, T]) Set(key K, value T) {
 	c.data[key] = value
 }
 
-func (c *Cache[K, T]) Get(key K) (*T, bool) {
+func (c *Cache[K, T]) Get(key K) (T, bool) {
 	c.lock.RLock()
 	defer c.lock.RUnlock()
 
 	data, ok := c.data[key]
 
-	return &data, ok
+	return data, ok
 }
 
 func (c *Cache[K, T]) Delete(key K) {
