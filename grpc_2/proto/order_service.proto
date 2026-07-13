@@ -9,20 +9,32 @@ service OrderService {
     rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse);
 }
 
+enum ORDER_STATUS{
+    CREATED = 0;
+    PROCESSING = 1;
+    FULFILLED = 2;
+    CANCELED = 3;
+}
+
 
 message OrderStatusRequest {
-    int64 order_id;
-    int64 user_id;
+    int64 order_id = 1;
+    int64 user_id = 2;
 }
 
 message OrderStatusResponse {
-    string order_status;
+    ORDER_STATUS status = 1;
 }
 
 message CreateOrderRequest {
-    int64 user_id;
-    int64 market_id;
-    string order_type;
-    int32 price;
-    uint32 quantity;
+    int64 user_id = 1;
+    int64 market_id = 2;
+    string order_type = 3;
+    int32 price = 4;
+    uint32 quantity = 5;
+}
+
+message CreateOrderResponse {
+    int64 order_id = 1;
+    ORDER_STATUS status = 2;
 }

@@ -4,14 +4,24 @@ package proto.spot_instrument;
 
 option go_package = "proto/spot_instrument";
 
+enum UserRole {
+    ADMIN = 0;
+    BROKER = 1;
+    USER = 2;
+}
+
 service SpotInstrumentService {
     rpc ViewMarkets(ViewMarketsRequest) returns (ViewMarketsResponse);
 }
 
 message ViewMarketsRequest {
-    repeated string user_roles;
+    UserRole user_roles = 1;
 }
 
 message ViewMarketsResponse{
-    repeated string markets
+    message Market{
+        int64 market_id = 1;
+        string market_name = 2;
+    }
+    repeated Market market_ids = 1;
 }
