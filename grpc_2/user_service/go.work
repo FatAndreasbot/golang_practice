@@ -1,0 +1,7 @@
+go 1.26.5
+
+use (
+	.
+	../../l3/concurrency/t_1
+	../proto
+)

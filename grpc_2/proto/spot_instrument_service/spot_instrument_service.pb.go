@@ -9,6 +9,7 @@ package spot_instrument
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	user_service "proto/user_service"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -21,58 +22,9 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type UserRole int32
-
-const (
-	UserRole_ADMIN  UserRole = 0
-	UserRole_BROKER UserRole = 1
-	UserRole_USER   UserRole = 2
-)
-
-// Enum value maps for UserRole.
-var (
-	UserRole_name = map[int32]string{
-		0: "ADMIN",
-		1: "BROKER",
-		2: "USER",
-	}
-	UserRole_value = map[string]int32{
-		"ADMIN":  0,
-		"BROKER": 1,
-		"USER":   2,
-	}
-)
-
-func (x UserRole) Enum() *UserRole {
-	p := new(UserRole)
-	*p = x
-	return p
-}
-
-func (x UserRole) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (UserRole) Descriptor() protoreflect.EnumDescriptor {
-	return file_spot_instrument_service_proto_enumTypes[0].Descriptor()
-}
-
-func (UserRole) Type() protoreflect.EnumType {
-	return &file_spot_instrument_service_proto_enumTypes[0]
-}
-
-func (x UserRole) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use UserRole.Descriptor instead.
-func (UserRole) EnumDescriptor() ([]byte, []int) {
-	return file_spot_instrument_service_proto_rawDescGZIP(), []int{0}
-}
-
 type ViewMarketsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserRoles     UserRole               `protobuf:"varint,1,opt,name=user_roles,json=userRoles,proto3,enum=proto.spot_instrument.UserRole" json:"user_roles,omitempty"`
+	UserRole      user_service.UserRole  `protobuf:"varint,1,opt,name=user_role,json=userRole,proto3,enum=proto.user_service.UserRole" json:"user_role,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -107,11 +59,11 @@ func (*ViewMarketsRequest) Descriptor() ([]byte, []int) {
 	return file_spot_instrument_service_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ViewMarketsRequest) GetUserRoles() UserRole {
+func (x *ViewMarketsRequest) GetUserRole() user_service.UserRole {
 	if x != nil {
-		return x.UserRoles
+		return x.UserRole
 	}
-	return UserRole_ADMIN
+	return user_service.UserRole(0)
 }
 
 type ViewMarketsResponse struct {
@@ -214,22 +166,16 @@ var File_spot_instrument_service_proto protoreflect.FileDescriptor
 
 const file_spot_instrument_service_proto_rawDesc = "" +
 	"\n" +
-	"\x1dspot_instrument_service.proto\x12\x15proto.spot_instrument\"T\n" +
-	"\x12ViewMarketsRequest\x12>\n" +
-	"\n" +
-	"user_roles\x18\x01 \x01(\x0e2\x1f.proto.spot_instrument.UserRoleR\tuserRoles\"\xae\x01\n" +
+	"\x1dspot_instrument_service.proto\x12\x15proto.spot_instrument\x1a\x12user_service.proto\"O\n" +
+	"\x12ViewMarketsRequest\x129\n" +
+	"\tuser_role\x18\x01 \x01(\x0e2\x1c.proto.user_service.UserRoleR\buserRole\"\xae\x01\n" +
 	"\x13ViewMarketsResponse\x12K\n" +
 	"\amarkets\x18\x01 \x03(\v21.proto.spot_instrument.ViewMarketsResponse.MarketR\amarkets\x1aJ\n" +
 	"\x06Market\x12\x1f\n" +
 	"\vmarket_uuid\x18\x01 \x01(\fR\n" +
 	"marketUuid\x12\x1f\n" +
 	"\vmarket_name\x18\x02 \x01(\tR\n" +
-	"marketName*+\n" +
-	"\bUserRole\x12\t\n" +
-	"\x05ADMIN\x10\x00\x12\n" +
-	"\n" +
-	"\x06BROKER\x10\x01\x12\b\n" +
-	"\x04USER\x10\x022}\n" +
+	"marketName2}\n" +
 	"\x15SpotInstrumentService\x12d\n" +
 	"\vViewMarkets\x12).proto.spot_instrument.ViewMarketsRequest\x1a*.proto.spot_instrument.ViewMarketsResponseB\x17Z\x15proto/spot_instrumentb\x06proto3"
 
@@ -245,19 +191,18 @@ func file_spot_instrument_service_proto_rawDescGZIP() []byte {
 	return file_spot_instrument_service_proto_rawDescData
 }
 
-var file_spot_instrument_service_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_spot_instrument_service_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_spot_instrument_service_proto_goTypes = []any{
-	(UserRole)(0),                      // 0: proto.spot_instrument.UserRole
-	(*ViewMarketsRequest)(nil),         // 1: proto.spot_instrument.ViewMarketsRequest
-	(*ViewMarketsResponse)(nil),        // 2: proto.spot_instrument.ViewMarketsResponse
-	(*ViewMarketsResponse_Market)(nil), // 3: proto.spot_instrument.ViewMarketsResponse.Market
+	(*ViewMarketsRequest)(nil),         // 0: proto.spot_instrument.ViewMarketsRequest
+	(*ViewMarketsResponse)(nil),        // 1: proto.spot_instrument.ViewMarketsResponse
+	(*ViewMarketsResponse_Market)(nil), // 2: proto.spot_instrument.ViewMarketsResponse.Market
+	(user_service.UserRole)(0),         // 3: proto.user_service.UserRole
 }
 var file_spot_instrument_service_proto_depIdxs = []int32{
-	0, // 0: proto.spot_instrument.ViewMarketsRequest.user_roles:type_name -> proto.spot_instrument.UserRole
-	3, // 1: proto.spot_instrument.ViewMarketsResponse.markets:type_name -> proto.spot_instrument.ViewMarketsResponse.Market
-	1, // 2: proto.spot_instrument.SpotInstrumentService.ViewMarkets:input_type -> proto.spot_instrument.ViewMarketsRequest
-	2, // 3: proto.spot_instrument.SpotInstrumentService.ViewMarkets:output_type -> proto.spot_instrument.ViewMarketsResponse
+	3, // 0: proto.spot_instrument.ViewMarketsRequest.user_role:type_name -> proto.user_service.UserRole
+	2, // 1: proto.spot_instrument.ViewMarketsResponse.markets:type_name -> proto.spot_instrument.ViewMarketsResponse.Market
+	0, // 2: proto.spot_instrument.SpotInstrumentService.ViewMarkets:input_type -> proto.spot_instrument.ViewMarketsRequest
+	1, // 3: proto.spot_instrument.SpotInstrumentService.ViewMarkets:output_type -> proto.spot_instrument.ViewMarketsResponse
 	3, // [3:4] is the sub-list for method output_type
 	2, // [2:3] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
@@ -275,14 +220,13 @@ func file_spot_instrument_service_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_spot_instrument_service_proto_rawDesc), len(file_spot_instrument_service_proto_rawDesc)),
-			NumEnums:      1,
+			NumEnums:      0,
 			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_spot_instrument_service_proto_goTypes,
 		DependencyIndexes: file_spot_instrument_service_proto_depIdxs,
-		EnumInfos:         file_spot_instrument_service_proto_enumTypes,
 		MessageInfos:      file_spot_instrument_service_proto_msgTypes,
 	}.Build()
 	File_spot_instrument_service_proto = out.File

@@ -2,12 +2,12 @@ syntax = "proto3";
 
 package proto.order_service;
 
-import "google/type/money.proto";
+import "money.proto";
 
 option go_package = "proto/order_service";
 
 service OrderService {
-  rpc GetOrderStatus (OrderStatusRequest) returns (OrderStatusResponse);
+  rpc OrderStatus (OrderStatusRequest) returns (OrderStatusResponse);
   rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse);
 }
 
