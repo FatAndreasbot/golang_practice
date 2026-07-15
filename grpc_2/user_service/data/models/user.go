@@ -8,10 +8,10 @@ import (
 )
 
 type User struct {
-	ID uuid.UUID
-	Username string
-	passwordHash [32]byte
-	Role user_service.UserRole
+	ID           uuid.UUID             `json:"uuid"`
+	Username     string                `json:"username"`
+	passwordHash [32]byte              `json:"-"`
+	Role         user_service.UserRole `json:"role"`
 }
 
 func NewUser(username, password string, role user_service.UserRole) *User{

@@ -18,7 +18,7 @@ type headerData struct {
 	Type string `json:"typ"`
 }
 
-func Encode(data *map[string]string) (string, error) {
+func Encode(data any) (string, error) {
 	var token string
 	header, err := encodedHeader()
 	if err != nil {
@@ -60,7 +60,7 @@ func encodedHeader() (string, error){
 	return encodedHeader, nil
 }
 
-func encodePayload(data *map[string]string) (string, error) {
+func encodePayload(data any) (string, error) {
 	var encodedPayload string
 
 	jsonString, err := json.Marshal(data)
@@ -113,10 +113,11 @@ func encodeSignature(header, payload string) (string, error) {
 	return encodedSignature, nil
 }
 
-func Decode(token string) (*map[string]string, error) {
+func Decode[T any](token string) (T, error) {
+	var result T
 	splitted := strings.Split(token, ".")
 	if len(splitted) != 3{
-		return nil, errors.New("incorrect token")
+		return result, errors.New("incorrect token")
 	}
 	header := splitted[0]
 	payload := splitted[1]
@@ -124,14 +125,16 @@ func Decode(token string) (*map[string]string, error) {
 
 	expectedSignature, err := encodeSignature(header, payload)
 	if err != nil {
-		return nil, errors.Join(err, errors.New("could not get jwt signature to check"))
+		return result, errors.Join(err, errors.New("could not get jwt signature to check"))
 	}
 	if signature != expectedSignature {
-		return nil, errors.New("incorrect JWT signature")
+		return result, errors.New("incorrect JWT signature")
 	}
 
-	var data map[string]string
-	json.Unmarshal([]byte(payload), &data)
+	err = json.Unmarshal([]byte(payload), &result)
+	if err != nil {
+		return result, errors.Join(err, errors.New("could not parse json"))
+	}
 
-	return &data, nil
+	return result, nil
 }

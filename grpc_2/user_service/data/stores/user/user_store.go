@@ -13,7 +13,7 @@ type UserMemStore struct {
 	usernames *t1.Cache[string, uuid.UUID]
 }
 
-func NewUserStore() *UserMemStore{
+func NewUserMemStore() *UserMemStore{
 	return &UserMemStore{
 		store: t1.NewCache[uuid.UUID, *models.User](),
 	}
