@@ -6,8 +6,11 @@ import (
 	"client/storage"
 	"context"
 	"errors"
+	"fmt"
 	"proto/user_service"
 	"sync"
+
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 var once sync.Once
@@ -49,6 +52,16 @@ func (h *userServiceHandler) handleLogin(username, password string) error {
 	return nil
 }
 
+func (h *userServiceHandler) handleGetRole() (string, error) {
+	ctx := context.Background()
+	resp, err := h.grpcClient.GetUserRole(ctx, &emptypb.Empty{})
+	if err != nil {
+		return "", err
+	}
+
+	return user_service.UserRole_name[int32(resp.GetUserRole())], nil
+}
+
 func AddUserServiceHandlers(dispatcher *handlers.CommandDispatcher){
 	dispatcher.AddCommand("login", func(params ...string) (string, error) {
 		if len(params) != 2 {
@@ -61,5 +74,15 @@ func AddUserServiceHandlers(dispatcher *handlers.CommandDispatcher){
 			return "error during login", err
 		}
 		return "successful login", nil
+	})
+
+	dispatcher.AddCommand("getrole", func(s ...string) (string, error) {
+		handler := GetUserServiceHandler()
+		role, err := handler.handleGetRole()
+		if err != nil {
+			return "", err
+		}
+
+		return fmt.Sprintf("your role is %q", role), nil
 	})
 }

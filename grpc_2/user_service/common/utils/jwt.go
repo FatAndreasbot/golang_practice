@@ -135,7 +135,11 @@ func DecodeJWT[T any](token string) (T, error) {
 		return result, errors.New("incorrect JWT signature")
 	}
 
-	err = json.Unmarshal([]byte(payload), &result)
+	decodedPayload, err := base64.StdEncoding.DecodeString(payload)
+	if err != nil {
+		return result, errors.New("could not decode payload")
+	}
+	err = json.Unmarshal(decodedPayload, &result)
 	if err != nil {
 		return result, errors.Join(err, errors.New("could not parse json"))
 	}
