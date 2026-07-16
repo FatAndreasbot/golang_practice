@@ -18,7 +18,7 @@ type headerData struct {
 	Type string `json:"typ"`
 }
 
-func Encode(data any) (string, error) {
+func EncodeJWT(data any) (string, error) {
 	var token string
 	header, err := encodedHeader()
 	if err != nil {
@@ -113,7 +113,7 @@ func encodeSignature(header, payload string) (string, error) {
 	return encodedSignature, nil
 }
 
-func Decode[T any](token string) (T, error) {
+func DecodeJWT[T any](token string) (T, error) {
 	var result T
 	splitted := strings.Split(token, ".")
 	if len(splitted) != 3{

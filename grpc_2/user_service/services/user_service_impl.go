@@ -55,7 +55,7 @@ func (s *UserService) LogIn(ctx context.Context, req *user_service.LogInRequest)
 		)
 	}
 
-	jwtToken, err := jwt.Encode(user)
+	jwtToken, err := jwt.EncodeJWT(user)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not generate jwt token")
 	}

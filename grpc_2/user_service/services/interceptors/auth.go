@@ -25,7 +25,7 @@ func Authenticate(ctx context.Context) (context.Context, error) {
 		return ctx, errors.Join(err , errors.New("could not find jwt"))
 	}
 
-	user, err := jwt.Decode[models.User](token)
+	user, err := jwt.DecodeJWT[models.User](token)
 	if err != nil {
 		return ctx, errors.Join(err, errors.New("could not decode token"))
 	}
