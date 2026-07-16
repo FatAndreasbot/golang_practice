@@ -15,8 +15,6 @@ func main(){
 	dispatcher := handlers.NewCommandDispatcher()
 	userservice_handlers.AddUserServiceHandlers(dispatcher)
 
-
-
 	for {
 		if scanner.Scan() {
 			var args []string

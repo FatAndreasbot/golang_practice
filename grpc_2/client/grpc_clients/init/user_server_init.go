@@ -3,7 +3,6 @@ package init
 import (
 	"client/grpc_clients/interceptors"
 	"client/storage"
-	"errors"
 	"proto/user_service"
 
 	"google.golang.org/grpc"
@@ -23,5 +22,5 @@ func InitUserServiceClient(address string) (user_service.UserServiceClient, *sto
 	}
 
 	client := user_service.NewUserServiceClient(conn)
-	return client, &tokenStore, errors.New("not implemented")
+	return client, &tokenStore, nil
 }

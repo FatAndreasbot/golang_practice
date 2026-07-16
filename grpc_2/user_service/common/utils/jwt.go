@@ -44,7 +44,8 @@ func encodedHeader() (string, error){
 	var encodedHeader string
 	alg, envWasSet := os.LookupEnv("JWT_ALG")
 	if !envWasSet{
-		return "", errors.New("environment variable JWT_ALG was not set")
+		// fallback if env wasnt set. ONLY FOR TESTING!!!
+		alg = "HS256"
 	}
 
 	headerdata := headerData{
@@ -69,14 +70,16 @@ func encodePayload(data any) (string, error) {
 	}
 
 	encodedPayload = base64.StdEncoding.EncodeToString(jsonString)
-	return encodedPayload, errors.New("not implemented")
+	return encodedPayload, nil
 }
 
 func encodeSignature(header, payload string) (string, error) {
 	var encodedSignature string
+	// ideally i should read env vars in init, and then store them in memory
 	secret, envWasSet := os.LookupEnv("JWT_SECRET")
 	if !envWasSet{
-		return "", errors.New("environment variable JWT_SECRET was not set")
+		// fallback if env wasnt set. ONLY FOR TESTING!!!
+		secret = "4l4MYgc4hjAtUK0INR2xfO7kDXJieWub4JNkPcqQ4S5g7uoYgGAtE52cqVs5DwGm"
 	}
 
 	var alg string
@@ -85,7 +88,8 @@ func encodeSignature(header, payload string) (string, error) {
 	if err != nil {
 		alg, envWasSet = os.LookupEnv("JWT_ALG")
 		if !envWasSet{
-			return "", errors.New("environment variable JWT_ALG was not set")
+			// fallback if env wasnt set. ONLY FOR TESTING!!!
+			alg = "HS256"
 		}
 	} else {
 		var headerdata headerData

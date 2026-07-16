@@ -14,9 +14,11 @@ type UserMemStore struct {
 }
 
 func NewUserMemStore() *UserMemStore{
-	return &UserMemStore{
+	memStore := UserMemStore{
 		store: t1.NewCache[uuid.UUID, *models.User](),
+		usernames: t1.NewCache[string, uuid.UUID](),
 	}
+	return &memStore
 }
 
 func (s *UserMemStore) AddUser(user *models.User) error {
@@ -26,6 +28,7 @@ func (s *UserMemStore) AddUser(user *models.User) error {
 	}
 
 	s.store.Set(user.ID, user)
+	s.usernames.Set(user.Username, user.ID)
 	return nil
 }
 
@@ -37,5 +40,10 @@ func (s *UserMemStore) GetByID(id uuid.UUID) (*models.User, error){
 }
 
 func (s *UserMemStore) GetByUsername(username string) (*models.User, error){
-	return nil, errors.New("not implemented")
+	id, ok := s.usernames.Get(username)
+	if !ok {
+		return nil, errors.New("user not found")
+	}
+	user, _ := s.store.Get(id)
+	return user, nil
 }

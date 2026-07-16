@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"log"
 	"proto/user_service"
 	jwt "user_service/common/utils"
 	"user_service/data/models"
@@ -57,6 +58,7 @@ func (s *UserService) LogIn(ctx context.Context, req *user_service.LogInRequest)
 
 	jwtToken, err := jwt.EncodeJWT(user)
 	if err != nil {
+		log.Default().Println(err)
 		return nil, status.Error(codes.Internal, "could not generate jwt token")
 	}
 

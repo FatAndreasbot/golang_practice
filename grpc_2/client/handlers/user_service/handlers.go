@@ -43,7 +43,7 @@ func (h *userServiceHandler) handleLogin(username, password string) error {
 		Password: password,
 	})
 	if err != nil {
-		return nil
+		return err
 	}
 	h.tokenStore.Set(resp.GetJwtToken())
 	return nil
@@ -56,6 +56,10 @@ func AddUserServiceHandlers(dispatcher *handlers.CommandDispatcher){
 		}
 		handler := GetUserServiceHandler()
 		username, password := params[0], params[1]
-		return "", handler.handleLogin(username, password)
+		err := handler.handleLogin(username, password)
+		if err != nil {
+			return "error during login", err
+		}
+		return "successful login", nil
 	})
 }
