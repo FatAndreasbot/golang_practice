@@ -68,7 +68,6 @@ func loadKeys(){
 func EncodeJWT(data any) (string, error) {
 	var token string
 	loadKeysOnce.Do(loadKeys)
-
 	if privateKey == nil {
 		return token, errors.New("could not load keys")
 	}
@@ -140,6 +139,11 @@ func encodeSignature(header, payload string) (string, error) {
 }
 
 func VerifySignature(token string) error {
+	loadKeysOnce.Do(loadKeys)
+	if publicKey == nil {
+		return errors.New("could not load keys")
+	}
+
 	splitted := strings.Split(token, ".")
 	if len(splitted) != 3{
 		return errors.New("incorrect token")
