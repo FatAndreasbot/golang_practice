@@ -15,6 +15,12 @@ type SpotInstrumentServer struct {
 	store market.MarketStore
 }
 
+func NewSpotInstrumentServer(store market.MarketStore) *SpotInstrumentServer{
+	return &SpotInstrumentServer{
+		store: store,
+	}
+}
+
 func (s *SpotInstrumentServer) ViewMarkets(ctx context.Context, req *service.ViewMarketsRequest) (*service.ViewMarketsResponse, error) {
 	userdata, ok := ctx.Value("userdata").(models.User)
 	if !ok {

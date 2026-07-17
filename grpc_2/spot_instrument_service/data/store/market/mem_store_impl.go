@@ -14,6 +14,13 @@ type MemMarketStore struct {
 	mu sync.RWMutex
 }
 
+func NewMemMarketStore() *MemMarketStore {
+	return &MemMarketStore{
+		store: make(map[uuid.UUID]*models.Market),
+		mu: sync.RWMutex{},
+	}
+}
+
 
 func (s *MemMarketStore) GetMarkets() []*models.Market {
 	var result []*models.Market
