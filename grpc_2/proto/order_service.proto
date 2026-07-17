@@ -20,7 +20,7 @@ enum OrderStatus{
 }
 
 message OrderStatusRequest {
-  int64 order_id = 1;
+  string order_uuid = 1;
 }
 
 message OrderStatusResponse {
@@ -28,14 +28,13 @@ message OrderStatusResponse {
 }
 
 message CreateOrderRequest {
-  int64 user_id = 1;
-  bytes market_uuid = 2;
+  string market_uuid = 2;
   string order_type = 3;
   google.type.Money price = 4;
   double quantity = 5;
 }
 
 message CreateOrderResponse {
-  int64 order_id = 1;
+  string order_id = 1;
   OrderStatus status = 2;
 }

@@ -79,7 +79,7 @@ func (OrderStatus) EnumDescriptor() ([]byte, []int) {
 
 type OrderStatusRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OrderId       int64                  `protobuf:"varint,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
+	OrderUuid     string                 `protobuf:"bytes,1,opt,name=order_uuid,json=orderUuid,proto3" json:"order_uuid,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -114,11 +114,11 @@ func (*OrderStatusRequest) Descriptor() ([]byte, []int) {
 	return file_order_service_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *OrderStatusRequest) GetOrderId() int64 {
+func (x *OrderStatusRequest) GetOrderUuid() string {
 	if x != nil {
-		return x.OrderId
+		return x.OrderUuid
 	}
-	return 0
+	return ""
 }
 
 type OrderStatusResponse struct {
@@ -167,8 +167,7 @@ func (x *OrderStatusResponse) GetStatus() OrderStatus {
 
 type CreateOrderRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	MarketUuid    []byte                 `protobuf:"bytes,2,opt,name=market_uuid,json=marketUuid,proto3" json:"market_uuid,omitempty"`
+	MarketUuid    string                 `protobuf:"bytes,2,opt,name=market_uuid,json=marketUuid,proto3" json:"market_uuid,omitempty"`
 	OrderType     string                 `protobuf:"bytes,3,opt,name=order_type,json=orderType,proto3" json:"order_type,omitempty"`
 	Price         *money.Money           `protobuf:"bytes,4,opt,name=price,proto3" json:"price,omitempty"`
 	Quantity      float64                `protobuf:"fixed64,5,opt,name=quantity,proto3" json:"quantity,omitempty"`
@@ -206,18 +205,11 @@ func (*CreateOrderRequest) Descriptor() ([]byte, []int) {
 	return file_order_service_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *CreateOrderRequest) GetUserId() int64 {
-	if x != nil {
-		return x.UserId
-	}
-	return 0
-}
-
-func (x *CreateOrderRequest) GetMarketUuid() []byte {
+func (x *CreateOrderRequest) GetMarketUuid() string {
 	if x != nil {
 		return x.MarketUuid
 	}
-	return nil
+	return ""
 }
 
 func (x *CreateOrderRequest) GetOrderType() string {
@@ -243,7 +235,7 @@ func (x *CreateOrderRequest) GetQuantity() float64 {
 
 type CreateOrderResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OrderId       int64                  `protobuf:"varint,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
+	OrderId       string                 `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
 	Status        OrderStatus            `protobuf:"varint,2,opt,name=status,proto3,enum=proto.order_service.OrderStatus" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -279,11 +271,11 @@ func (*CreateOrderResponse) Descriptor() ([]byte, []int) {
 	return file_order_service_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *CreateOrderResponse) GetOrderId() int64 {
+func (x *CreateOrderResponse) GetOrderId() string {
 	if x != nil {
 		return x.OrderId
 	}
-	return 0
+	return ""
 }
 
 func (x *CreateOrderResponse) GetStatus() OrderStatus {
@@ -297,21 +289,21 @@ var File_order_service_proto protoreflect.FileDescriptor
 
 const file_order_service_proto_rawDesc = "" +
 	"\n" +
-	"\x13order_service.proto\x12\x13proto.order_service\x1a\vmoney.proto\"/\n" +
-	"\x12OrderStatusRequest\x12\x19\n" +
-	"\border_id\x18\x01 \x01(\x03R\aorderId\"O\n" +
+	"\x13order_service.proto\x12\x13proto.order_service\x1a\vmoney.proto\"3\n" +
+	"\x12OrderStatusRequest\x12\x1d\n" +
+	"\n" +
+	"order_uuid\x18\x01 \x01(\tR\torderUuid\"O\n" +
 	"\x13OrderStatusResponse\x128\n" +
-	"\x06status\x18\x01 \x01(\x0e2 .proto.order_service.OrderStatusR\x06status\"\xb3\x01\n" +
-	"\x12CreateOrderRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x1f\n" +
-	"\vmarket_uuid\x18\x02 \x01(\fR\n" +
+	"\x06status\x18\x01 \x01(\x0e2 .proto.order_service.OrderStatusR\x06status\"\x9a\x01\n" +
+	"\x12CreateOrderRequest\x12\x1f\n" +
+	"\vmarket_uuid\x18\x02 \x01(\tR\n" +
 	"marketUuid\x12\x1d\n" +
 	"\n" +
 	"order_type\x18\x03 \x01(\tR\torderType\x12(\n" +
 	"\x05price\x18\x04 \x01(\v2\x12.google.type.MoneyR\x05price\x12\x1a\n" +
 	"\bquantity\x18\x05 \x01(\x01R\bquantity\"j\n" +
 	"\x13CreateOrderResponse\x12\x19\n" +
-	"\border_id\x18\x01 \x01(\x03R\aorderId\x128\n" +
+	"\border_id\x18\x01 \x01(\tR\aorderId\x128\n" +
 	"\x06status\x18\x02 \x01(\x0e2 .proto.order_service.OrderStatusR\x06status*\x99\x01\n" +
 	"\vOrderStatus\x12\x1c\n" +
 	"\x18ORDER_STATUS_UNSPECIFIED\x10\x00\x12\x18\n" +

@@ -112,7 +112,7 @@ func (x *ViewMarketsResponse) GetMarkets() []*ViewMarketsResponse_Market {
 
 type ViewMarketsResponse_Market struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	MarketUuid    []byte                 `protobuf:"bytes,1,opt,name=market_uuid,json=marketUuid,proto3" json:"market_uuid,omitempty"`
+	MarketUuid    string                 `protobuf:"bytes,1,opt,name=market_uuid,json=marketUuid,proto3" json:"market_uuid,omitempty"`
 	MarketName    string                 `protobuf:"bytes,2,opt,name=market_name,json=marketName,proto3" json:"market_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -148,11 +148,11 @@ func (*ViewMarketsResponse_Market) Descriptor() ([]byte, []int) {
 	return file_spot_instrument_service_proto_rawDescGZIP(), []int{1, 0}
 }
 
-func (x *ViewMarketsResponse_Market) GetMarketUuid() []byte {
+func (x *ViewMarketsResponse_Market) GetMarketUuid() string {
 	if x != nil {
 		return x.MarketUuid
 	}
-	return nil
+	return ""
 }
 
 func (x *ViewMarketsResponse_Market) GetMarketName() string {
@@ -172,7 +172,7 @@ const file_spot_instrument_service_proto_rawDesc = "" +
 	"\x13ViewMarketsResponse\x12K\n" +
 	"\amarkets\x18\x01 \x03(\v21.proto.spot_instrument.ViewMarketsResponse.MarketR\amarkets\x1aJ\n" +
 	"\x06Market\x12\x1f\n" +
-	"\vmarket_uuid\x18\x01 \x01(\fR\n" +
+	"\vmarket_uuid\x18\x01 \x01(\tR\n" +
 	"marketUuid\x12\x1f\n" +
 	"\vmarket_name\x18\x02 \x01(\tR\n" +
 	"marketName2}\n" +

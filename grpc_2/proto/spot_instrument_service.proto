@@ -16,7 +16,7 @@ message ViewMarketsRequest {
 
 message ViewMarketsResponse{
   message Market{
-    bytes market_uuid = 1;
+    string market_uuid = 1;
     string market_name = 2;
   }
   repeated Market markets = 1;
