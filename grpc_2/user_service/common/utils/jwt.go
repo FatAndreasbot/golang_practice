@@ -1,16 +1,19 @@
 package jwt
 
 import (
-	"crypto/hmac"
+	"crypto"
+	"crypto/rand"
+	"crypto/rsa"
 	"crypto/sha256"
+	"crypto/x509"
 	"encoding/base64"
 	"encoding/json"
+	"encoding/pem"
 	"errors"
 	"fmt"
-	"hash"
 	"os"
 	"strings"
-
+	"sync"
 )
 
 type headerData struct {
@@ -18,8 +21,58 @@ type headerData struct {
 	Type string `json:"typ"`
 }
 
+var loadKeysOnce sync.Once
+var privateKey *rsa.PrivateKey = nil
+var publicKey *rsa.PublicKey = nil
+func loadKeys(){
+	// -------------------- private key --------------------
+	data, err := os.ReadFile("private_key.pem")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	block, _ := pem.Decode(data)
+	parsedKey, err := x509.ParsePKCS8PrivateKey(block.Bytes)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	castedPrivateKeyKey, ok := parsedKey.(*rsa.PrivateKey)
+	if !ok{
+		fmt.Println("could not cast private key")
+		return
+	}
+	privateKey = castedPrivateKeyKey
+
+	// -------------------- public key --------------------
+	data, err = os.ReadFile("public_key.pem")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	block, _ = pem.Decode(data)
+	parsedKey, err = x509.ParsePKIXPublicKey(block.Bytes)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	castedPublicKey, ok := parsedKey.(*rsa.PublicKey)
+	if !ok{
+		fmt.Println("could not cast public key")
+		privateKey = nil
+		return
+	}
+	publicKey = castedPublicKey
+}
+
 func EncodeJWT(data any) (string, error) {
 	var token string
+	loadKeysOnce.Do(loadKeys)
+
+	if privateKey == nil {
+		return token, errors.New("could not load keys")
+	}
+
 	header, err := encodedHeader()
 	if err != nil {
 		return token, errors.Join(err, errors.New("could not get jwt header"))
@@ -42,11 +95,7 @@ func EncodeJWT(data any) (string, error) {
 
 func encodedHeader() (string, error){
 	var encodedHeader string
-	alg, envWasSet := os.LookupEnv("JWT_ALG")
-	if !envWasSet{
-		// fallback if env wasnt set. ONLY FOR TESTING!!!
-		alg = "HS256"
-	}
+	alg := "RS256"
 
 	headerdata := headerData{
 		Algorythm: alg,
@@ -56,7 +105,7 @@ func encodedHeader() (string, error){
 	if err != nil{
 		return encodedHeader, errors.Join(err, errors.New("could not get a json object from given data"))
 	}
-	encodedHeader = base64.StdEncoding.EncodeToString(headerJSON)
+	encodedHeader = base64.URLEncoding.EncodeToString(headerJSON)
 
 	return encodedHeader, nil
 }
@@ -69,73 +118,61 @@ func encodePayload(data any) (string, error) {
 		return encodedPayload, errors.Join(err, errors.New("could not get a json object from given data"))
 	}
 
-	encodedPayload = base64.StdEncoding.EncodeToString(jsonString)
+	encodedPayload = base64.URLEncoding.EncodeToString(jsonString)
 	return encodedPayload, nil
 }
 
 func encodeSignature(header, payload string) (string, error) {
-	var encodedSignature string
-	// ideally i should read env vars in init, and then store them in memory
-	secret, envWasSet := os.LookupEnv("JWT_SECRET")
-	if !envWasSet{
-		// fallback if env wasnt set. ONLY FOR TESTING!!!
-		secret = "4l4MYgc4hjAtUK0INR2xfO7kDXJieWub4JNkPcqQ4S5g7uoYgGAtE52cqVs5DwGm"
-	}
-
-	var alg string
-
-	decodedHeader, err := base64.StdEncoding.DecodeString(header)
+	var signature string
+	hash := sha256.Sum256([]byte(header + "." + payload))
+	sign, err := rsa.SignPKCS1v15(
+		rand.Reader,
+		privateKey,
+		crypto.SHA256,
+		hash[:],
+	)
 	if err != nil {
-		alg, envWasSet = os.LookupEnv("JWT_ALG")
-		if !envWasSet{
-			// fallback if env wasnt set. ONLY FOR TESTING!!!
-			alg = "HS256"
-		}
-	} else {
-		var headerdata headerData
-		if err = json.Unmarshal(decodedHeader, &headerdata); err != nil {
-			return encodedSignature, errors.Join(err, errors.New("could not read header data"))
-		}
-		alg = headerdata.Algorythm
+		return signature, err
 	}
+	signature = base64.URLEncoding.EncodeToString(sign)
 
-	var hasher hash.Hash
-	switch alg{
-		case "HS256":
-		hasher = hmac.New(sha256.New, []byte(secret))
-		default:
-		return encodedSignature, fmt.Errorf("algorythm %q is unsupported", alg)
+	return signature, nil
+}
+
+func VerifySignature(token string) error {
+	splitted := strings.Split(token, ".")
+	if len(splitted) != 3{
+		return errors.New("incorrect token")
 	}
+	signature, err := base64.URLEncoding.DecodeString(splitted[2])
+	if err != nil{
+		return err
+	}
+	hash := sha256.Sum256([]byte(splitted[0] + "." + splitted[1]))
 
-	hasher.Write([]byte(header))
-	hasher.Write([]byte("."))
-	hasher.Write([]byte(payload))
-
-	signature := hasher.Sum(nil)
-	encodedSignature = base64.StdEncoding.EncodeToString(signature)
-
-	return encodedSignature, nil
+	return rsa.VerifyPKCS1v15(
+		publicKey,
+		crypto.SHA256,
+		hash[:],
+		signature,
+	)
 }
 
 func DecodeJWT[T any](token string) (T, error) {
 	var result T
+	err := VerifySignature(token)
+	if err != nil{
+		return result, err
+	}
+
 	splitted := strings.Split(token, ".")
 	if len(splitted) != 3{
 		return result, errors.New("incorrect token")
 	}
-	header := splitted[0]
+
 	payload := splitted[1]
-	signature := splitted[2]
 
-	expectedSignature, err := encodeSignature(header, payload)
-	if err != nil {
-		return result, errors.Join(err, errors.New("could not get jwt signature to check"))
-	}
-	if signature != expectedSignature {
-		return result, errors.New("incorrect JWT signature")
-	}
-
-	decodedPayload, err := base64.StdEncoding.DecodeString(payload)
+	decodedPayload, err := base64.URLEncoding.DecodeString(payload)
 	if err != nil {
 		return result, errors.New("could not decode payload")
 	}
