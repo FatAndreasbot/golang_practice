@@ -3,10 +3,13 @@ package models
 import (
 	"proto/user_service"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type Market struct {
 	Name         string
+	ID           uuid.UUID
 	Enabled      bool
 	DeletedAt    *time.Time
 	AllowedRoles map[user_service.UserRole]struct{}
@@ -14,6 +17,7 @@ type Market struct {
 
 func NewMarket(name string, allowedRoles ...user_service.UserRole) *Market {
 	result := Market{
+		ID:           uuid.New(),
 		Name:         name,
 		AllowedRoles: make(map[user_service.UserRole]struct{}),
 		Enabled:      true,
