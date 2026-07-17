@@ -63,7 +63,7 @@ func (h *userServiceHandler) handleGetRole() (string, error) {
 }
 
 func AddUserServiceHandlers(dispatcher *handlers.CommandDispatcher){
-	dispatcher.AddCommand("login", func(params ...string) (string, error) {
+	dispatcher.AddCommand("login", "username, password", func(params ...string) (string, error) {
 		if len(params) != 2 {
 			return "", errors.New("expected 2 parameters. username password")
 		}
@@ -76,7 +76,7 @@ func AddUserServiceHandlers(dispatcher *handlers.CommandDispatcher){
 		return "successful login", nil
 	})
 
-	dispatcher.AddCommand("getrole", func(s ...string) (string, error) {
+	dispatcher.AddCommand("getrole", "returns your user role", func(s ...string) (string, error) {
 		handler := GetUserServiceHandler()
 		role, err := handler.handleGetRole()
 		if err != nil {
