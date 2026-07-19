@@ -2,14 +2,13 @@ package grpcInit
 
 import (
 	"client/grpc_clients/interceptors"
-	"proto/user_service"
+	"proto/order_service"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-
-func InitUserServiceClient(address string) (user_service.UserServiceClient, error){
+func InitOrderServiceClient(address string, ) (order_service.OrderServiceClient, error) {
 	conn, err := grpc.NewClient(
 		address,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
@@ -19,6 +18,7 @@ func InitUserServiceClient(address string) (user_service.UserServiceClient, erro
 		return nil, err
 	}
 
-	client := user_service.NewUserServiceClient(conn)
+	client := order_service.NewOrderServiceClient(conn)
+
 	return client, nil
 }

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"os"
 	"sync"
 )
 
@@ -34,7 +35,11 @@ func NewCommandDispatcher() *CommandDispatcher{
 			}
 		}
 		return helpMessage, nil
+	})
 
+	dispatcher.AddCommand("exit", "to exit this programm", func(params ...string) (string, error) {
+		defer os.Exit(0)
+		return "", nil
 	})
 
 	return dispatcher

@@ -10,7 +10,7 @@ import (
 
 const LOGIN_METHOD string = ""
 
-func AuthInterceptor(tokenStore *storage.TokenStore) grpc.UnaryClientInterceptor{
+func AuthInterceptor() grpc.UnaryClientInterceptor{
 	return func(
 		ctx context.Context,
 		method string,
@@ -19,6 +19,7 @@ func AuthInterceptor(tokenStore *storage.TokenStore) grpc.UnaryClientInterceptor
 		invoker grpc.UnaryInvoker,
 		opts ...grpc.CallOption,
 	) error {
+		tokenStore := storage.GetTokenStore()
 		if method != LOGIN_METHOD {
 			if token := tokenStore.Get(); token != "" {
 				ctx = metadata.AppendToOutgoingContext(

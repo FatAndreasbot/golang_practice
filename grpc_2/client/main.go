@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"client/handlers"
-	userservice_handlers "client/handlers/user_service"
 	"fmt"
 	"os"
 	"strings"
@@ -13,8 +12,12 @@ func main(){
 	scanner := bufio.NewScanner(os.Stdin)
 
 	dispatcher := handlers.NewCommandDispatcher()
-	userservice_handlers.AddUserServiceHandlers(dispatcher)
 
+	handlers.AddUserServiceHandlers(dispatcher)
+	handlers.AddOrderServiceHandlers(dispatcher)
+	handlers.AddSpotInstrumentServiceHandlers(dispatcher)
+
+	dispatcher.ExecuteCommand("help")
 	for {
 		if scanner.Scan() {
 			var args []string

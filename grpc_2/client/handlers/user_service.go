@@ -1,8 +1,7 @@
-package userservice
+package handlers
 
 import (
 	grpcInit "client/grpc_clients/init"
-	"client/handlers"
 	"client/storage"
 	"context"
 	"errors"
@@ -13,30 +12,28 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-var once sync.Once
-var handler userServiceHandler
+var createUserServiceSingletonOnce sync.Once
+var userServiceSingleton userServiceHandler
 
 const USER_SERVICE_ADDRESS = "localhost:8080"
 
 type userServiceHandler struct {
 	grpcClient user_service.UserServiceClient
-	tokenStore *storage.TokenStore
 }
 
 func GetUserServiceHandler() *userServiceHandler{
-	once.Do(func(){
-		client, tokenStore, err := grpcInit.InitUserServiceClient(USER_SERVICE_ADDRESS)
+	createUserServiceSingletonOnce.Do(func(){
+		client, err := grpcInit.InitUserServiceClient(USER_SERVICE_ADDRESS)
 		if err != nil {
 			panic(err)
 		}
 
-		handler = userServiceHandler{
+		userServiceSingleton = userServiceHandler{
 			grpcClient: client,
-			tokenStore: tokenStore,
 		}
 	})
 
-	return &handler
+	return &userServiceSingleton
 }
 
 func (h *userServiceHandler) handleLogin(username, password string) error {
@@ -48,7 +45,7 @@ func (h *userServiceHandler) handleLogin(username, password string) error {
 	if err != nil {
 		return err
 	}
-	h.tokenStore.Set(resp.GetJwtToken())
+	storage.GetTokenStore().Set(resp.GetJwtToken())
 	return nil
 }
 
@@ -62,7 +59,7 @@ func (h *userServiceHandler) handleGetRole() (string, error) {
 	return user_service.UserRole_name[int32(resp.GetUserRole())], nil
 }
 
-func AddUserServiceHandlers(dispatcher *handlers.CommandDispatcher){
+func AddUserServiceHandlers(dispatcher *CommandDispatcher){
 	dispatcher.AddCommand("login", "username, password", func(params ...string) (string, error) {
 		if len(params) != 2 {
 			return "", errors.New("expected 2 parameters. username password")

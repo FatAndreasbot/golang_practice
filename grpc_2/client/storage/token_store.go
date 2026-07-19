@@ -2,6 +2,16 @@ package storage
 
 import "sync"
 
+var globalTokenStore TokenStore
+var createGlobalTokenStoreOnce sync.Once
+
+func GetTokenStore() *TokenStore {
+	createGlobalTokenStoreOnce.Do(func() {
+		globalTokenStore = TokenStore{}
+	})
+	return &globalTokenStore
+}
+
 type TokenStore struct {
 	mu sync.RWMutex
 	token string
