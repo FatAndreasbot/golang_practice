@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	spot_instrument "proto/spot_instrument_service"
+	"spot_instrument_service/common/mocks"
 	"spot_instrument_service/data/store/market"
 	"spot_instrument_service/services"
 	"spot_instrument_service/services/interceptors"
@@ -24,6 +25,7 @@ func main() {
 		)),
 	)
 	store := market.NewMemMarketStore()
+	mocks.FillMockMarkets(store)
 
 	service := services.NewSpotInstrumentServer(store)
 	spot_instrument.RegisterSpotInstrumentServiceServer(

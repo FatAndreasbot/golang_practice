@@ -24,33 +24,14 @@ var loadKeysOnce sync.Once
 var privateKey *rsa.PrivateKey = nil
 var publicKey *rsa.PublicKey = nil
 func loadKeys(){
-	// -------------------- private key --------------------
-	data, err := os.ReadFile("private_key.pem")
+	// -------------------- public key --------------------
+	data, err := os.ReadFile("public_key.pem")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	block, _ := pem.Decode(data)
-	parsedKey, err := x509.ParsePKCS8PrivateKey(block.Bytes)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	castedPrivateKeyKey, ok := parsedKey.(*rsa.PrivateKey)
-	if !ok{
-		fmt.Println("could not cast private key")
-		return
-	}
-	privateKey = castedPrivateKeyKey
-
-	// -------------------- public key --------------------
-	data, err = os.ReadFile("public_key.pem")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	block, _ = pem.Decode(data)
-	parsedKey, err = x509.ParsePKIXPublicKey(block.Bytes)
+	parsedKey, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
 		fmt.Println(err)
 		return

@@ -21,6 +21,13 @@ func NewMemMarketStore() *MemMarketStore {
 	}
 }
 
+func (s *MemMarketStore) SaveMarket(newMarket *models.Market) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	s.store[newMarket.ID] = newMarket
+	return nil
+}
 
 func (s *MemMarketStore) GetMarkets() []*models.Market {
 	var result []*models.Market

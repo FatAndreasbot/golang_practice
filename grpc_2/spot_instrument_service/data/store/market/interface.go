@@ -6,6 +6,7 @@ import (
 )
 
 type MarketStore interface{
+	SaveMarket(*models.Market) error
 	GetMarkets() []*models.Market
 	FilteredByUserRoles(userRole user_service.UserRole) []*models.Market
 }
